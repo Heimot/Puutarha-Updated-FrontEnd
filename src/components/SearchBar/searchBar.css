@@ -1,0 +1,23 @@
+.search {
+    display: flex;
+    margin-top: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.selectSearchOption {
+    border-bottom-right-radius: 0px !important; 
+    border-top-right-radius: 0px !important;
+    width: 125px !important;
+}
+
+Input {
+    width: 300px !important;
+    border-radius: 0px !important;
+}
+
+Button {
+    width: 75px;
+    border-bottom-left-radius: 0px !important; 
+    border-top-left-radius: 0px !important;
+}
