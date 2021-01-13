@@ -16,7 +16,7 @@ Input {
     border-radius: 0px !important;
 }
 
-Button {
+.searchBtn {
     width: 75px;
     border-bottom-left-radius: 0px !important; 
     border-top-left-radius: 0px !important;

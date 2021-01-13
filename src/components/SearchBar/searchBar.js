@@ -18,7 +18,7 @@ function SearchBar(props) {
                     <option>Kauppa</option>
                 </Input>
                 <Input name="search" onChange={(e) => searchOnChange(e) + props.stop(e.target.value)} value={searchValue.search} ></Input>
-                <Button onClick={() => props.search(searchValue)}>Etsi</Button>
+                <Button className="searcBtn" onClick={() => props.search(searchValue)}>Etsi</Button>
             </div>
         </div>
     )
