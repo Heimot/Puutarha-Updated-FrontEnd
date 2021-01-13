@@ -4,16 +4,13 @@ import TableUI from '../Table/table';
 import 'bootstrap/dist/css/bootstrap.css';
 
 function CardTable(props) {
-    console.log(props)
     return props.items.map((item) => (
-
-            <Card className="text-dark">
+            <Card key={item._id} className="text-dark">
                 <CardTitle>{item.kauppa}</CardTitle>
                 <CardBody className="border rounded">
                     <TableUI products={item.products} />
                 </CardBody>
             </Card>
-
     ))
 }
 
