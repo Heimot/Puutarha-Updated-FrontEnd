@@ -11,7 +11,7 @@ function Dashboard() {
     const res = useFetch("http://localhost:3002/orders/tables", `?date=${sessionStorage.getItem("date")}&valmis=Ei&kerays=Ryönä&kukka=&kauppa=`, {
         method: 'GET', headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwidXNlcklkIjoiNWZlYjQzOTMwYmZlNGMyMzI4NGEzZTdiIiwicm9sZXMiOiJBZG1pbiIsImlhdCI6MTYxMDU0NjcwMiwiZXhwIjoxNjEwNjMzMTAyfQ.Q37wus1LIH6RgO4U7b-__JrSJTSApK8PcRtHUMVxUtE'
+            'Authorization': 'Bearer ' + sessionStorage.getItem("token")
         }
     });
 
@@ -75,11 +75,10 @@ function Dashboard() {
     }
 
     return (
-        <div>
+        <div className="dashboard">
             {item !== undefined ? <div>
-                <Button onClick={() => post()}></Button>
                 <SearchBar search={(s) => searchFilter(s)} stop={(s) => stopSearch(s)} />
-                <div className="test">
+                <div className="tables">
 
                     <CardTable items={item} />
 

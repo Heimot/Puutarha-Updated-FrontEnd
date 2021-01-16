@@ -1,11 +1,16 @@
-.test {
+.dashboard {
+    display: flex;
+    margin-top: 50px;
+}
+
+.tables {
     display: flex;
     flex-wrap: wrap;
     align-content: space-between;
     align-items: flex-start;
 }
 
-.test>* {
+.tables>* {
         flex: 1 1 750px;
         margin: 10px;
 }
