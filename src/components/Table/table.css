@@ -13,8 +13,15 @@ Td, Th {
 
 Th {
     border-top: none;
+    height: 40px;
+    background-color: black;
+    color: white;
 }
 
 Td:first-child, Th:first-child {
      border-left: none;
+}
+
+Td {
+    height: 50px;
 }
