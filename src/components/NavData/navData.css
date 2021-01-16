@@ -1,0 +1,10 @@
+.navData {
+    color: black;
+    width: 300px;
+}
+
+.navBtn {
+    border-radius: 0px;
+    width: 100%;
+    height: 50px;
+}
