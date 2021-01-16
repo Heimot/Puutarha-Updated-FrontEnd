@@ -1,6 +1,7 @@
 import { Switch, Route } from "react-router-dom";
 import Dashboard from './dashboard/dashboard';
 import LoginPanel from './loginPanel/loginPanel';
+import Nav from './navigationBar/nav';
 import './App.css';
 
 function App() {
@@ -15,7 +16,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Switch>
-          <Route path="/dashboard"><Dashboard /></Route>
+          <Route path="/dashboard">
+            <Nav />
+            <Dashboard />
+          </Route>
           <Route path="/" exact><LoginPanel /></Route>
         </Switch>
       </header>
