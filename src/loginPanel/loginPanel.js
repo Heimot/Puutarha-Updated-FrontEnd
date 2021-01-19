@@ -3,7 +3,6 @@ import { Card, Input, Label, Form, Button } from 'reactstrap';
 import { normalFetch } from '../components/Fetch/Fetch';
 import { Redirect } from "react-router-dom"
 import '../loginPanel/login.css';
-import { render } from '@testing-library/react';
 
 function LoginPanel() {
     const [details, setDetails] = useState({ pass: "", user: "" })
@@ -11,11 +10,10 @@ function LoginPanel() {
 
     const login = async (e) => {
         e.preventDefault();
-        const login = await normalFetch("http://localhost:3002/user/login", {
+        const login = await normalFetch("user/login", {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwidXNlcklkIjoiNWZlYjQzOTMwYmZlNGMyMzI4NGEzZTdiIiwicm9sZXMiOiJBZG1pbiIsImlhdCI6MTYxMDM2Nzk0MCwiZXhwIjoxNjEwNDU0MzQwfQ.Yy9KbWXYxFjVT9JRB2A7V5ZkpSNReedCylo0NhzmkCg'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 email: details.user,
