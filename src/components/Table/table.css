@@ -1,14 +1,14 @@
 Table {
-    border-collapse:separate !important;
-    border:solid black 1px;
-    border-radius:6px;
-    -moz-border-radius:6px;
+    border-collapse: separate !important;
+    border: solid black 1px;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
     font-size: 20px;
 }
 
 Td, Th {
-    border-left:solid black 1px;
-    border-top:solid black 1px;
+    border-left: solid black 1px;
+    border-top: solid black 1px;
 }
 
 Th {
@@ -19,9 +19,43 @@ Th {
 }
 
 Td:first-child, Th:first-child {
-     border-left: none;
+    border-left: none;
 }
 
 Td {
     height: 50px;
+}
+
+.ok {
+    color: black !important;
+}
+
+.kss {
+
+    background-color: #d4ca15 !important;
+    color: black !important;
+}
+
+.k {
+
+    background-color: #1fa30d !important;
+    color: black !important;
+}
+
+.eo {
+
+    background-color: #db2121 !important;
+    color: yellow !important;
+}
+
+.inputTable {
+    width: 150px;
+}
+
+.inputValueTable {
+    width: 100px;
+}
+
+.tableText {
+    text-align: center !important;
 }
