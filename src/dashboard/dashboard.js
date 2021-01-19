@@ -2,49 +2,57 @@ import CardTable from '../components/CardTable/card';
 import { useState, useEffect } from 'react';
 import SearchBar from '../components/SearchBar/searchBar';
 import '../dashboard/dashboard.css';
-import { Button } from 'reactstrap';
-import { useFetch } from '../components/Fetch/Fetch';
+import { normalFetch } from '../components/Fetch/Fetch';
 
 function Dashboard() {
     let [type, setType] = useState(false);
+    let [flower, setFlower] = useState("");
+    let [store, setStore] = useState("");
+    let [item, setItem] = useState(null);
 
-    const res = useFetch("http://localhost:3002/orders/tables", `?date=${sessionStorage.getItem("date")}&valmis=Ei&kerays=Ryönä&kukka=&kauppa=`, {
-        method: 'GET', headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+    useEffect(() => {
+        async function getData() {
+            let res = await normalFetch(`orders/tables?date=${sessionStorage.getItem("date")}&valmis=Ei&kerays=Ryönä&kukka=${flower}&kauppa=${store}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+                },
+            });
+            setItem(res.product)
         }
-    });
+        getData();
 
-    if (res.response === null) {
+        return () => {
+            //
+        }
+    }, [flower, store])
+
+    if (item === null) {
         return <div>Loading....</div>
     }
-
-    let item = res.response.product;
 
     const stopSearch = (s) => {
         if (type) {
             if (s.length <= 0) {
-
-                item = res.response.product;
+                setFlower("");
+                setStore("");
                 setType(false);
             }
         }
     }
 
-    const searchFilter = (s) => {
+    const searchFilter = async (s) => {
         setType(true);
+        let kukka = "";
         switch (s.searchOption) {
             case "Kauppa":
                 setType(true);
-                // VOI TEHDÄ SERVUN PUOLELLA MIKÄLI HALUAN
-                console.log(item)
-                item = item.filter((item) => {
-                    return item.kauppa.toLowerCase().includes(s.search.toLowerCase());
-                });
+                setStore(s.search);
                 break;
             case "Kukka":
                 setType(true);
-                // KUKKA FILTERING TEHDÄÄN SERVUN PUOLELLA
+                setFlower(s.search);
                 break;
             default:
                 //  
