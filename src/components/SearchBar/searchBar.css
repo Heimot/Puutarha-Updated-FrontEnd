@@ -11,7 +11,7 @@
     width: 125px !important;
 }
 
-Input {
+.searchInput {
     width: 300px !important;
     border-radius: 0px !important;
 }
