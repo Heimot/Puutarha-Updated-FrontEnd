@@ -1,5 +1,6 @@
 import { Table, Thead, Tbody, Th, Tr, Td } from 'react-super-responsive-table';
-import { Input, Button } from 'reactstrap';
+import { Input } from 'reactstrap';
+import { socketConnID } from '../Sockets/socketio';
 import { normalFetch } from '../Fetch/Fetch';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import '../Table/table.css';
@@ -8,7 +9,6 @@ function TableUI(props) {
     const changeValue = (itemState, id) => {
         let updatedState = "";
         let maara = document.getElementById(`keratty/${id}`).value;
-        console.log(maara)
         if (maara === "") {
             maara = document.getElementById(`keratty/${id}`).placeholder
         }
@@ -46,7 +46,7 @@ function TableUI(props) {
             ])
         })
 
-        //socket tähän
+        socketConnID(props.id);
     }
     return (
         <Table>
