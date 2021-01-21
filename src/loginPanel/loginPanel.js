@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, Input, Label, Form, Button } from 'reactstrap';
 import { normalFetch } from '../components/Fetch/Fetch';
 import { Redirect } from "react-router-dom"
+import { userDataGrabber} from "../components/Sockets/socket-ioConn";
 import '../loginPanel/login.css';
 
 function LoginPanel() {
@@ -24,6 +25,7 @@ function LoginPanel() {
 
         if (login.message === "Auth successful") {
             sessionStorage.setItem("token", login.token);
+            userDataGrabber(login);
             setReady(true);
         }
 
