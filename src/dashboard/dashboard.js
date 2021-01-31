@@ -32,22 +32,32 @@ function Dashboard() {
     useEffect(() => {
         socket.on('chat', async (data) => {
             if (data.message === true) {
-                getTable(data.id);
+                getTable();
             };
         });
         socket.on('idUpdate', async (data) => {
             if (data.message === true) {
-                getTable(data.id);
+                getTable(data.id, data.updateOrNew);
             };
         });
     }, [])
 
     useEffect(() => {
-        let update = item.map(obj => object.find(o => o._id === obj._id) || obj);
-        setItem(update);
+        let update;
+        if (object.isArray) {
+            update = item.map(obj => object.find(o => o._id === obj._id) || obj);
+            setItem(update);
+        } else {
+            if (object.length === undefined) {
+                setItem([...item, object])
+            }
+        }
+        return (() => {
+            update = "";
+        })
     }, [object])
 
-    const getTable = async (id) => {
+    const getTable = async (id, updateOrNew) => {
         let e = await normalFetch(`orders/get/id/${id}?paikka=&valmis=Ei&kukka=${flo}&kauppa=${sto}`, {
             method: 'GET',
             headers: {
@@ -55,7 +65,13 @@ function Dashboard() {
                 'Authorization': 'Bearer ' + sessionStorage.getItem("token")
             },
         });
-        setObject([e]);
+
+        if (updateOrNew) {
+            setObject([e]);
+        } else {
+            setObject(e);
+        }
+
     }
 
     if (item === null) {
