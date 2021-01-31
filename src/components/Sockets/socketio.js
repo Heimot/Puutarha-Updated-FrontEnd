@@ -6,10 +6,11 @@ export const socketConnChat = () => {
     });
 }
 
-export const socketConnID = (_id) => {
+export const socketConnID = (_id, update) => {
     socket.emit('idUpdate', {
         id: _id,
-        message: true
+        message: true,
+        updateOrNew: update
     });
 }
 
