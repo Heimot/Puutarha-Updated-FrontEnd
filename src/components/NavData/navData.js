@@ -1,7 +1,7 @@
 import { Button } from "reactstrap";
 import './navData.css';
 
-function NavData() {
+function NavData(props) {
 
     return (
         <div className="navData">
@@ -11,7 +11,7 @@ function NavData() {
             <Button className="navBtn">Kerättävät</Button>
             <Button className="navBtn">Ryönä</Button>
             <Button className="navBtn">pvm systeemi tähä</Button>
-            <Button className="navBtn">Lisää uusi tilaus</Button>
+            <Button className="navBtn" onClick={() => props.close()}>Lisää uusi tilaus</Button>
             <Button className="navBtn">Eteneminen</Button>
             <Button className="navBtn">Kirjaudu ulos</Button>
         </div>
