@@ -46,7 +46,7 @@ function TableUI(props) {
             ])
         })
 
-        socketConnID(props.id);
+        socketConnID(props.id, true);
     }
     return (
         <Table>
