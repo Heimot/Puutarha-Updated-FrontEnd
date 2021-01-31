@@ -32,7 +32,7 @@
     top: 60px;
     height: 100%;
     width: 100%;
-    background-color: gray;
+    background-color: #808080;
     opacity: 0.6;
     transition: 500ms;
     z-index: 0;
@@ -41,4 +41,68 @@
 .navSide {
     display: flex;
     justify-content: flex-end;
+}
+
+.dialogNav {
+    color: black;
+    padding: 10px;
+}
+
+.dialogMainData {
+    display: flex;
+    justify-content: space-between;
+}
+
+.dialogDateData {
+    display: flex;
+    flex-direction: row;
+}
+
+.dialogDateData div:nth-child(1) Input:nth-child(3) {
+    margin: 25px 0px 25px 0px;
+}
+
+.dialogDateData div:nth-child(2) {
+    margin-left: 50px;
+}
+
+.dialogButtons {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogButtons div {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0 10px 0;
+}
+
+.createFlowerButton {
+    width: 100px !important;
+}
+
+.createFlowersInput {
+    width: 100px !important;
+}
+
+@media only screen and (max-width: 720px) {
+    .dialogNav {
+        color: black;
+        padding: 10px;
+    }
+    
+    .dialogMainData {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .dialogDateData {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    
+    .dialogDateData div:nth-child(2) {
+        margin-left: 0px;
+    }
 }
