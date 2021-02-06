@@ -3,9 +3,11 @@ import { Table, Thead, Tbody, Th, Tr, Td } from 'react-super-responsive-table';
 import { Button, Card, CardText, Input } from "reactstrap";
 import NavData from "../components/NavData/navData";
 import Dialog from '../components/Dialog/dialog';
-import { socketConnID } from '../components/Sockets/socketio';
+import { socketConnChat } from '../components/Sockets/socketio';
 import { normalFetch } from '../components/Fetch/Fetch';
 import "../navigationBar/nav.css";
+
+let arrayOfIds = [];
 
 function Nav() {
     const [Open, setOpen] = useState(false);
@@ -14,6 +16,10 @@ function Nav() {
     const [dialog, setDialog] = useState(false);
     const [newFlowers, setNewFlowers] = useState(1);
     const [newTable, setNewTable] = useState(null);
+    const [order, setOrder] = useState("");
+    const [kauppa, setKauppa] = useState("");
+    const [alisatieto, setAlisatieto] = useState("");
+    const [ostotilaus, setOstotilaus] = useState("");
 
     useEffect(() => {
         if (Open) {
@@ -30,11 +36,26 @@ function Nav() {
         }
     }, [Open])
 
+    const addFlowers = async () => {
+        let products = await createProducts();
 
+        await normalFetch('orders/put/id/' + order, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                products: products
+            })
+        })
+        let newTableData = await newTableGetter(order);
+        socketConnChat();
+        setNewTable(newTableData);
+    }
 
-    const closeAndCreate = async () => {
+    const createProducts = async () => {
         let i;
-        let arrayOfIds = [];
         for (i = 0; i < newFlowers; i++) {
             let id = await normalFetch('products/post', {
                 method: 'POST',
@@ -43,9 +64,24 @@ function Nav() {
                     'Authorization': 'Bearer ' + sessionStorage.getItem("token")
                 }
             })
-
             arrayOfIds.push(id.createdProduct._id);
         }
+        return arrayOfIds;
+    }
+
+    const newTableGetter = async (id) => {
+        let newTableData = await normalFetch('orders/get/id/' + id, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+            }
+        })
+        return newTableData;
+    }
+
+    const closeAndCreate = async () => {
+        let arrayOfIds = await createProducts();
 
         let checkdata = await normalFetch('orders/post/', {
             method: 'POST',
@@ -61,21 +97,110 @@ function Nav() {
                 products: arrayOfIds
             })
         })
+        setOrder(checkdata.createdOrder._id);
 
-        let newTableData = await normalFetch('orders/get/id/' + checkdata.createdOrder._id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + sessionStorage.getItem("token")
-            }
-        })
+        let newTableData = await newTableGetter(checkdata.createdOrder._id);
 
-        socketConnID(checkdata.createdOrder._id, false);
+        socketConnChat();
         setNewTable(newTableData);
         setBlock("nothing");
         setClose("closedNav");
         setOpen(false);
         setDialog(true);
+    }
+
+    const addValuesToTable = async () => {
+        let asiakas = kauppa;
+        let asiakaslisatieto = alisatieto;
+        let keraysPVM = "06/02/2021";
+        let toimitusaika = "06/02/2021";
+        let orderLisatieto = ostotilaus;
+
+
+        if (asiakas.length < 1) {
+            asiakas = newTable.products.kauppa;
+        }
+
+        if (asiakaslisatieto.length < 1) {
+            asiakaslisatieto = newTable.products.alisatieto;
+        }
+
+        if (keraysPVM.length < 1) {
+            keraysPVM = newTable.products.date;
+        }
+
+        if (toimitusaika.length < 1) {
+            toimitusaika = newTable.products.toimituspvm;
+        }
+
+        if (orderLisatieto.length < 1) {
+            orderLisatieto = newTable.products.orderLisatieto;
+        }
+
+        await normalFetch('orders/put/id/' + order, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                kauppa: asiakas,
+                alisatieto: asiakaslisatieto,
+                date: keraysPVM,
+                toimituspvm: toimitusaika,
+                orderLisatieto: orderLisatieto
+            })
+        })
+        setDialog(false)
+    }
+
+    const updateProducts = async () => {
+        async function sendData(kukka, toimi, kerays, lisatieto, id) {
+            await normalFetch('products/put/id/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    kukka: kukka,
+                    toimi: toimi,
+                    kerays: kerays,
+                    lisatieto: lisatieto
+                }),
+            })
+        }
+        arrayOfIds.map((id) => {
+            let kukka = document.getElementById(`kukka/${id}`).value;
+            let kerays = document.getElementById(`kerays/${id}`).value;
+            let toimi = document.getElementById(`toimi/${id}`).value;
+            let lisatieto = document.getElementById(`lisatieto/${id}`).value;
+            if (kukka.length < 1) {
+                kukka = "vakio";
+            }
+
+            if (toimi.length < 1) {
+                toimi = 0;
+            }
+
+            if (kerays.length < 1) {
+                kerays = "Ryönä";
+            }
+
+            if (lisatieto.length < 1) {
+                lisatieto = "";
+            }
+            sendData(kukka, toimi, kerays, lisatieto, id)
+        })
+        socketConnChat();
+    }
+
+    const emptyData = () => {
+        setKauppa("");
+        setAlisatieto("");
+        setOstotilaus("");
+        setNewFlowers(1)
+        arrayOfIds = [];
     }
 
     return (
@@ -87,14 +212,14 @@ function Nav() {
                 </div>
             </div>
             <div className={Block} />
-            {newTable !== null ? <Dialog isOpen={dialog} onLoad={false} onClose={() => setDialog(false) + setNewFlowers(1)}>
+            {newTable !== null ? <Dialog isOpen={dialog} onLoad={false} onClose={() => setDialog(false) + emptyData()}>
                 <Card className="dialogNav">
                     <div className="dialogMainData">
                         <div className="dialogDateData">
                             <div>
                                 <CardText>Keräyspäivämäärä</CardText>
                                 <Input placeholder={newTable.date}></Input>
-                                <Input placeholder={newTable.kauppa}></Input>
+                                <Input onChange={(e) => setKauppa(e.target.value)} value={kauppa} placeholder={newTable.kauppa}></Input>
                             </div>
                             <div>
                                 <CardText>Toimituspäivämäärä</CardText>
@@ -103,8 +228,8 @@ function Nav() {
 
                         </div>
                         <div>
-                            <Input type="textarea" placeholder={newTable.alisatieto}></Input>
-                            <Input placeholder={"Ostotilaus"}></Input>
+                            <Input onChange={(e) => setAlisatieto(e.target.value)} value={alisatieto} type="textarea" placeholder={newTable.alisatieto}></Input>
+                            <Input onChange={(e) => setOstotilaus(e.target.value)} value={ostotilaus} placeholder={"Ostotilaus"}></Input>
                         </div>
                     </div>
                     <Table>
@@ -135,10 +260,10 @@ function Nav() {
                     </Table>
                     <div className="dialogButtons">
                         <div>
-                            <Button className="createFlowersButton">Lisää kukka</Button>
+                            <Button onClick={() => addFlowers()} className="createFlowersButton">Lisää kukka</Button>
                             <Input onChange={(e) => setNewFlowers(e.target.value)} value={newFlowers} min={1} max={10} className="createFlowersInput" type="number"></Input>
                         </div>
-                        <Button onClick={() => setNewFlowers(1)}>Luo taulukko</Button>
+                        <Button onClick={() => addValuesToTable() + updateProducts() + emptyData()}>Luo taulukko</Button>
                     </div>
                 </Card>
             </Dialog> : null}
