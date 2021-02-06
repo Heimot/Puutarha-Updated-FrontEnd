@@ -1,0 +1,16 @@
+.cardTitles {
+    margin-left: 5px;
+    text-align: left !important;
+    flex: 1;
+}
+
+.cardLisatiedot {
+    margin-right: 5px;
+    text-align: right!important;
+    flex: 1;
+}
+
+.cardTableOrder {
+    display: flex !important;
+ 
+}
