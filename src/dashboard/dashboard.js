@@ -7,17 +7,19 @@ import socket from '../components/Sockets/socket-ioConn';
 
 let flo = "";
 let sto = "";
+let ip = 0;
 
 function Dashboard() {
     const [type, setType] = useState(false);
     const [flower, setFlower] = useState("");
     const [store, setStore] = useState("");
     const [item, setItem] = useState([]);
-    const [object, setObject] = useState([]);
+    const [object, setObject] = useState();
+    const [update, setUpdate] = useState(null);
 
     useEffect(() => {
         async function getData() {
-            let res = await normalFetch(`orders/tables?date=${sessionStorage.getItem("date")}&valmis=Ei&kerays=Ryönä&kukka=${flo}&kauppa=${sto}`, {
+            let res = await normalFetch(`orders/tables?date=${sessionStorage.getItem("date")}&valmis=Ei&kerays=&kukka=${flo}&kauppa=${sto}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,12 +29,13 @@ function Dashboard() {
             setItem(res.product)
         }
         getData();
-    }, [flower, store])
+    }, [flower, store, update])
 
     useEffect(() => {
         socket.on('chat', async (data) => {
             if (data.message === true) {
-                getTable();
+                setUpdate(ip)
+                ip++;
             };
         });
         socket.on('idUpdate', async (data) => {
@@ -43,18 +46,22 @@ function Dashboard() {
     }, [])
 
     useEffect(() => {
-        let update;
-        if (object.isArray) {
-            update = item.map(obj => object.find(o => o._id === obj._id) || obj);
-            setItem(update);
-        } else {
-            if (object.length === undefined) {
-                setItem([...item, object])
+        try {
+            let update;
+            if (Array.isArray(object)) {
+                update = item.map(obj => object.find(o => o._id === obj._id) || obj);
+                setItem(update);
+            } else {
+                if (object.length === undefined) {
+                    setItem([...item, object])
+                }
             }
+            return (() => {
+                update = "";
+            })
+        } catch (err) {
+            console.log("err")
         }
-        return (() => {
-            update = "";
-        })
     }, [object])
 
     const getTable = async (id, updateOrNew) => {
