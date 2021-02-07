@@ -112,8 +112,8 @@ function Nav() {
     const addValuesToTable = async () => {
         let asiakas = kauppa;
         let asiakaslisatieto = alisatieto;
-        let keraysPVM = "06/02/2021";
-        let toimitusaika = "06/02/2021";
+        let keraysPVM = sessionStorage.getItem("date");
+        let toimitusaika = sessionStorage.getItem("date");
         let orderLisatieto = ostotilaus;
 
 
