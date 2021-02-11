@@ -211,7 +211,7 @@ function Nav() {
                     <NavData close={closeAndCreate} />
                 </div>
             </div>
-            <div className={Block} />
+            <div onClick={() => setOpen(false)} className={Block} />
             {newTable !== null ? <Dialog isOpen={dialog} onLoad={false} onClose={() => setDialog(false) + emptyData()}>
                 <Card className="dialogNav">
                     <div className="dialogMainData">
