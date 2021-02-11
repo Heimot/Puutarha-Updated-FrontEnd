@@ -59,3 +59,12 @@ Td {
 .tableText {
     text-align: center !important;
 }
+
+.editInformation {
+    display: flex;
+}
+
+.deleteButton {
+    height: 37px;
+    background-color: red !important;
+}
