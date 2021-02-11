@@ -8,7 +8,7 @@ function Dialog(props) {
             <div className="dialogDisabler">
             </div>
             <div className="dialogStyles">
-                {!props.onLoad ? <Button className="dialogCloseButtonStyles" onClick={props.onClose}>x</Button> : undefined}
+                {!props.onLoad ? <button className="dialogCloseButtonStyles" onClick={props.onClose}>x</button> : undefined}
                 <div>{props.children}</div>
             </div>
         </div>
