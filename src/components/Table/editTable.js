@@ -8,6 +8,7 @@ import '../Table/table.css';
 
 function EditTable(props) {
     const [items, setItems] = useState(null);
+    const [flower, setFlowers] = useState(1);
 
     useEffect(() => {
         setItems(() => props.item.products)
@@ -37,7 +38,6 @@ function EditTable(props) {
 
             if (kukka.length < 1) {
                 kukka = item.kukka;
-                console.log(item.kukka)
             }
             if (toimi.length < 1) {
                 toimi = item.toimi;
@@ -63,6 +63,82 @@ function EditTable(props) {
                 })
             })
         });
+
+        let kauppa = props.order.kauppa;
+        let kpvm = props.order.kpvm;
+        let tpvm = props.order.tpvm;
+        let lisatieto = props.order.lisatieto;
+        let ostotilaus = props.order.ostotilaus;
+
+        if (kauppa === undefined || kauppa.length < 1) {
+            kauppa = props.item.kauppa;
+        }
+        if (kpvm === undefined || kpvm.length < 1) {
+            kpvm = props.item.date;
+        }
+        if (tpvm === undefined || tpvm.length < 1) {
+            tpvm = props.item.toimituspvm;
+        }
+        if (lisatieto === undefined || lisatieto.length < 1) {
+            lisatieto = props.item.alisatieto;
+        }
+        if (ostotilaus === undefined || ostotilaus.length < 1) {
+            ostotilaus = props.item.orderLisatieto;
+        }
+
+        normalFetch('orders/put/id/' + props.item._id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                kauppa: kauppa,
+                date: kpvm,
+                toimituspvm: tpvm,
+                alisatieto: lisatieto,
+                orderLisatieto: ostotilaus
+            })
+        })
+
+        socketConnID(props.item._id, true);
+        props.close()
+    }
+
+    const addFlowers = async() => {
+        let arr = [];
+        let ids = [];
+        let i;
+        for (i = 0; i < flower; i++) {
+            let id = await normalFetch('products/post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+                }
+            })
+            if(id.message !== undefined) {
+                arr = [...arr, id.createdProduct];
+            }
+        }
+        arr.map((id) => {
+            ids = [...ids, id._id]
+        })
+
+        items.map((id) => {
+            ids = [...ids, id._id]
+        })
+        await normalFetch('orders/put/id/' + props.item._id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                products: ids
+            })
+        })
+        setItems([...items, ...arr]);
         socketConnID(props.item._id, true);
     }
 
@@ -99,7 +175,11 @@ function EditTable(props) {
                         })}
                     </Tbody>
                 </Table>
-                <Button onClick={() => updateOrder()}>Update</Button>
+                <div className="editDiv">
+                    <Input type="number" className="editTableAmount" value={flower} onChange={(e) => setFlowers(e.target.value)} min={1} max={10}></Input>
+                    <Button onClick={() => addFlowers()} className="editTableAddFlower">Lisää kukka</Button>
+                    <Button onClick={() => updateOrder()}>Update</Button>
+                </div>
             </>
         )
     } else {
