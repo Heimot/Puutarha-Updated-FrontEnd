@@ -68,3 +68,22 @@ Td {
     height: 37px;
     background-color: red !important;
 }
+
+.editTableAddFlower {
+    margin-bottom: 10px !important;
+}
+
+.editTableAmount {
+    width: 100px !important;
+    border: black 1px solid !important;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.editDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
