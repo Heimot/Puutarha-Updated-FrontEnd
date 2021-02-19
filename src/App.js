@@ -5,12 +5,14 @@ import Nav from './navigationBar/nav';
 import './App.css';
 
 function App() {
-  const d = new Date();
-  const ye = new Intl.DateTimeFormat('fi', { year: 'numeric' }).format(d);
-  const mo = new Intl.DateTimeFormat('fi', { month: '2-digit' }).format(d);
-  const da = new Intl.DateTimeFormat('fi', { day: '2-digit' }).format(d);
+  if (sessionStorage.getItem('date') === null) {
+    const d = new Date();
+    const ye = new Intl.DateTimeFormat('fi', { year: 'numeric' }).format(d);
+    const mo = new Intl.DateTimeFormat('fi', { month: '2-digit' }).format(d);
+    const da = new Intl.DateTimeFormat('fi', { day: '2-digit' }).format(d);
 
-  sessionStorage.setItem("date", `${da}/${mo}/${ye}`);
+    sessionStorage.setItem("date", `${da}/${mo}/${ye}`);
+  }
 
   return (
     <div className="App">
