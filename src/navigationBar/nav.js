@@ -5,6 +5,10 @@ import NavData from "../components/NavData/navData";
 import Dialog from '../components/Dialog/dialog';
 import { socketConnChat } from '../components/Sockets/socketio';
 import { normalFetch } from '../components/Fetch/Fetch';
+import DatePicker from 'react-datepicker';
+
+import "react-datepicker/dist/react-datepicker.css";
+
 import "../navigationBar/nav.css";
 
 let arrayOfIds = [];
@@ -20,6 +24,13 @@ function Nav() {
     const [kauppa, setKauppa] = useState("");
     const [alisatieto, setAlisatieto] = useState("");
     const [ostotilaus, setOstotilaus] = useState("");
+    const [startDate, setStartDate] = useState(new Date());
+
+    useEffect(() => {
+        let dateS = sessionStorage.getItem('date').split('/');
+        let newDate = `${dateS[1]}/${dateS[0]}/${dateS[2]}`;
+        setStartDate(new Date(newDate));
+    }, [])
 
     useEffect(() => {
         if (Open) {
@@ -218,7 +229,7 @@ function Nav() {
                         <div className="dialogDateData">
                             <div>
                                 <CardText>Keräyspäivämäärä</CardText>
-                                <Input placeholder={newTable.date}></Input>
+                                <DatePicker value={newTable.date} selected={startDate} onChange={(date) => console.log(date)} />
                                 <Input onChange={(e) => setKauppa(e.target.value)} value={kauppa} placeholder={newTable.kauppa}></Input>
                             </div>
                             <div>
