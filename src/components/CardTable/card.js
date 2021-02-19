@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardBody, CardText, Button, Input } from 'reactstrap';
 import { socketConnChat } from '../Sockets/socketio';
 import { normalFetch } from '../Fetch/Fetch';
@@ -12,6 +12,13 @@ import './card.css';
 function CardTable(props) {
     const [dialog, setDialog] = useState(false);
     const [dialogItems, setDialogItems] = useState(null);
+    const [orderValues, setOrderValues] = useState({ "kpvm": "", "tpvm": "", "kauppa": "", "lisatieto": "", "ostotilaus": "" })
+
+    useEffect(() => {
+        if (dialogItems !== null) {
+            setOrderValues({ "kpvm": dialogItems.date, "tpvm": dialogItems.toimituspvm, "kauppa": dialogItems.kauppa, "lisatieto": dialogItems.lisatieto, "ostotilaus": dialogItems.ostotilaus })
+        }
+    }, [dialogItems])
 
     const DeleteOrder = async (item) => {
         item.products.map(async (product) => {
@@ -34,7 +41,7 @@ function CardTable(props) {
         console.log("Order deleted!")
         socketConnChat();
     }
-
+  
     return (
         <>
             {props.items.map((item) => (
@@ -64,7 +71,7 @@ function CardTable(props) {
                             <div>
                                 <CardText>Keräyspäivämäärä</CardText>
                                 <Input placeholder={dialogItems.date}></Input>
-                                <Input onChange={(e) => console.log("f")} value={dialogItems.kauppa} placeholder={dialogItems.kauppa}></Input>
+                                <Input name="kauppa" onChange={(e) => setOrderValues({...orderValues, [e.target.name]: e.target.value})} placeholder={dialogItems.kauppa}></Input>
                             </div>
                             <div>
                                 <CardText>Toimituspäivämäärä</CardText>
@@ -72,11 +79,11 @@ function CardTable(props) {
                             </div>
                         </div>
                         <div>
-                            <Input onChange={(e) => console.log("F")} value={dialogItems.alisatieto} type="textarea"></Input>
-                            <Input onChange={(e) => console.log("F")} value={dialogItems.ostotilaus} placeholder={"Ostotilaus"}></Input>
+                            <Input name="lisatieto" onChange={(e) => setOrderValues({...orderValues, [e.target.name]: e.target.value})} placeholder={dialogItems.alisatieto} type="textarea"></Input>
+                            <Input name="ostotilaus" onChange={(e) => setOrderValues({...orderValues, [e.target.name]: e.target.value})} placeholder={dialogItems.orderLisatieto}></Input>
                         </div>
                     </div>
-                    <EditTable item={dialogItems} />
+                    <EditTable item={dialogItems} order={orderValues} close={() => setDialog(false)} />
                 </Card>
             </Dialog> : null}
         </>
