@@ -48,7 +48,6 @@ function EditTable(props) {
             if (lisatieto.length < 1) {
                 lisatieto = item.lisatieto;
             }
-
             normalFetch('products/put/id/' + item._id, {
                 method: 'PUT',
                 headers: {
@@ -63,7 +62,6 @@ function EditTable(props) {
                 })
             })
         });
-
         let kauppa = props.order.kauppa;
         let kpvm = props.order.kpvm;
         let tpvm = props.order.tpvm;
@@ -85,7 +83,6 @@ function EditTable(props) {
         if (ostotilaus === undefined || ostotilaus.length < 1) {
             ostotilaus = props.item.orderLisatieto;
         }
-
         normalFetch('orders/put/id/' + props.item._id, {
             method: 'PUT',
             headers: {
@@ -124,7 +121,6 @@ function EditTable(props) {
         arr.map((id) => {
             ids = [...ids, id._id]
         })
-
         items.map((id) => {
             ids = [...ids, id._id]
         })
