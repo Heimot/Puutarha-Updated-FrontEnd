@@ -5,6 +5,7 @@ import { normalFetch } from '../Fetch/Fetch';
 import EditTable from '../Table/editTable';
 import Dialog from '../Dialog/dialog';
 import TableUI from '../Table/table';
+import DatePicker from 'react-datepicker';
 import 'bootstrap/dist/css/bootstrap.css';
 import './card.css';
 
@@ -12,11 +13,15 @@ import './card.css';
 function CardTable(props) {
     const [dialog, setDialog] = useState(false);
     const [dialogItems, setDialogItems] = useState(null);
-    const [orderValues, setOrderValues] = useState({ "kpvm": "", "tpvm": "", "kauppa": "", "lisatieto": "", "ostotilaus": "" })
+    const [orderValues, setOrderValues] = useState({ "kpvm": "", "tpvm": "", "kauppa": "", "lisatieto": "", "ostotilaus": "" });
+    const [date, setDate] = useState(new Date());
 
     useEffect(() => {
         if (dialogItems !== null) {
             setOrderValues({ "kpvm": dialogItems.date, "tpvm": dialogItems.toimituspvm, "kauppa": dialogItems.kauppa, "lisatieto": dialogItems.lisatieto, "ostotilaus": dialogItems.ostotilaus })
+            let dateS = dialogItems.date.split('/');
+            let newDate = `${dateS[1]}/${dateS[0]}/${dateS[2]}`;
+            setDate(new Date(newDate));
         }
     }, [dialogItems])
 
@@ -41,7 +46,7 @@ function CardTable(props) {
         console.log("Order deleted!")
         socketConnChat();
     }
-  
+
     return (
         <>
             {props.items.map((item) => (
@@ -70,8 +75,8 @@ function CardTable(props) {
                         <div className="dialogDateData">
                             <div>
                                 <CardText>Keräyspäivämäärä</CardText>
-                                <Input placeholder={dialogItems.date}></Input>
-                                <Input name="kauppa" onChange={(e) => setOrderValues({...orderValues, [e.target.name]: e.target.value})} placeholder={dialogItems.kauppa}></Input>
+                                <DatePicker className="datePicker" value={dialogItems.date} selected={date} onChange={(date) => setDate(date)} />
+                                <Input name="kauppa" onChange={(e) => setOrderValues({ ...orderValues, [e.target.name]: e.target.value })} placeholder={dialogItems.kauppa}></Input>
                             </div>
                             <div>
                                 <CardText>Toimituspäivämäärä</CardText>
@@ -79,8 +84,8 @@ function CardTable(props) {
                             </div>
                         </div>
                         <div>
-                            <Input name="lisatieto" onChange={(e) => setOrderValues({...orderValues, [e.target.name]: e.target.value})} placeholder={dialogItems.alisatieto} type="textarea"></Input>
-                            <Input name="ostotilaus" onChange={(e) => setOrderValues({...orderValues, [e.target.name]: e.target.value})} placeholder={dialogItems.orderLisatieto}></Input>
+                            <Input name="lisatieto" onChange={(e) => setOrderValues({ ...orderValues, [e.target.name]: e.target.value })} placeholder={dialogItems.alisatieto} type="textarea"></Input>
+                            <Input name="ostotilaus" onChange={(e) => setOrderValues({ ...orderValues, [e.target.name]: e.target.value })} placeholder={dialogItems.orderLisatieto}></Input>
                         </div>
                     </div>
                     <EditTable item={dialogItems} order={orderValues} close={() => setDialog(false)} />
